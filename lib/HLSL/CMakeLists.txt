@@ -9,6 +9,7 @@ add_llvm_library(LLVMHLSL
   ComputeViewIdState.cpp
   ComputeViewIdStateBuilder.cpp
   ControlDependence.cpp
+  DxilBindlessTransform.cpp
   DxilCondenseResources.cpp
   DxilContainerReflection.cpp
   DxilConvergent.cpp
