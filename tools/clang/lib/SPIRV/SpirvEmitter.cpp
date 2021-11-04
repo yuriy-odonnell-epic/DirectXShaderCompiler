@@ -687,8 +687,10 @@ void SpirvEmitter::HandleTranslationUnit(ASTContext &context) {
   }
 
   // Addressing and memory model are required in a valid SPIR-V module.
-  spvBuilder.setMemoryModel(spv::AddressingModel::Logical,
+  // @yuriy HACK for buffer reference experiment
+  spvBuilder.setMemoryModel(spv::AddressingModel::PhysicalStorageBuffer64,
                             spv::MemoryModel::GLSL450);
+
 
   // Even though the 'workQueue' grows due to the above loop, the first
   // 'numEntryPoints' entries in the 'workQueue' are the ones with the HLSL
@@ -7619,6 +7621,9 @@ SpirvEmitter::processIntrinsicCallExpr(const CallExpr *callExpr) {
   case hlsl::IntrinsicOp::IOP_VkReadClock:
     retVal = processIntrinsicReadClock(callExpr);
     break;
+  case hlsl::IntrinsicOp::IOP_VkRawBufferLoad:
+    retVal = processRawBufferLoad(callExpr);
+    break;
   case hlsl::IntrinsicOp::IOP_saturate:
     retVal = processIntrinsicSaturate(callExpr);
     break;
@@ -12523,6 +12528,28 @@ SpirvEmitter::processSpvIntrinsicCallExpr(const CallExpr *expr) {
   // TODO: Revisit this r-value setting when handling vk::ext_result_id<T> ?
   retVal->setRValue();
   return retVal;
+}
+
+SpirvInstruction *SpirvEmitter::processRawBufferLoad(const CallExpr *callExpr) {
+  clang::SourceLocation loc = callExpr->getExprLoc();
+  const clang::Expr *addressExpr = callExpr->getArg(0);
+  SpirvInstruction *address = doExpr(addressExpr);
+
+  const SpirvPointerType *bufferType =
+      spvBuilder.getPhysicalStorageBufferType();
+
+  SpirvUnaryOp *bufferReference =
+      spvBuilder.createUnaryOp(spv::Op::OpBitcast, bufferType, address, loc);
+
+  bufferReference->setStorageClass(spv::StorageClass::PhysicalStorageBuffer);
+
+  SpirvAccessChain *ac = spvBuilder.createAccessChain(astContext.UnsignedIntTy,
+                                                      bufferReference, {}, loc);
+
+  SpirvLoad *loadInst = spvBuilder.createLoad(astContext.UnsignedIntTy, ac, loc,
+                                              spv::MemoryAccessMask::Aligned);
+
+  return loadInst;
 }
 
 bool SpirvEmitter::spirvToolsValidate(std::vector<uint32_t> *mod,

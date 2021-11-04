@@ -239,6 +239,9 @@ import hctdb_instrhelp
   IOP_unpack_u8u16,
   IOP_unpack_u8u32,
 #ifdef ENABLE_SPIRV_CODEGEN
+  IOP_VkRawBufferLoad,
+#endif // ENABLE_SPIRV_CODEGEN
+#ifdef ENABLE_SPIRV_CODEGEN
   IOP_VkReadClock,
 #endif // ENABLE_SPIRV_CODEGEN
   MOP_Append,

@@ -795,6 +795,13 @@ SpirvUnaryOp::SpirvUnaryOp(spv::Op opcode, QualType resultType,
                            SourceLocation loc, SpirvInstruction *op)
     : SpirvInstruction(IK_UnaryOp, opcode, resultType, loc), operand(op) {}
 
+SpirvUnaryOp::SpirvUnaryOp(spv::Op opcode, const SpirvType *resultType,
+    SourceLocation loc, SpirvInstruction* op)
+    : SpirvInstruction(IK_UnaryOp, opcode, QualType(), loc), operand(op) 
+{
+    setResultType(resultType);
+}
+
 bool SpirvUnaryOp::isConversionOp() const {
   return opcode == spv::Op::OpConvertFToU || opcode == spv::Op::OpConvertFToS ||
          opcode == spv::Op::OpConvertSToF || opcode == spv::Op::OpConvertUToF ||

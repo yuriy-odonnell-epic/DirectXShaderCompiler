@@ -52,6 +52,7 @@ enum class Extension {
   NV_mesh_shader,
   KHR_ray_query,
   EXT_shader_image_int64,
+  EXT_physical_storage_buffer,
   Unknown,
 };
 

@@ -525,8 +525,7 @@ bool CapabilityVisitor::visitInstruction(SpirvInstruction *instr) {
   case spv::Op::OpRayQueryInitializeKHR: {
     auto rayQueryInst = dyn_cast<SpirvRayQueryOpKHR>(instr);
     if (rayQueryInst->hasCullFlags()) {
-      addCapability(
-          spv::Capability::RayTraversalPrimitiveCullingKHR);
+      addCapability(spv::Capability::RayTraversalPrimitiveCullingKHR);
     }
 
     break;
@@ -581,6 +580,13 @@ bool CapabilityVisitor::visit(SpirvEntryPoint *entryPoint) {
     llvm_unreachable("found unknown shader model");
     break;
   }
+
+  // @yuriy HACK for buffer reference experiment
+  addCapability(spv::Capability::PhysicalStorageBufferAddresses);
+  addCapability(spv::Capability::Int64);
+  addExtension(Extension::EXT_physical_storage_buffer,
+               "SPV_EXT_physical_storage_buffer", {});
+
   return true;
 }
 

@@ -1862,6 +1862,9 @@ public:
   SpirvUnaryOp(spv::Op opcode, QualType resultType, SourceLocation loc,
                SpirvInstruction *op);
 
+  SpirvUnaryOp(spv::Op opcode, const SpirvType* resultType, SourceLocation loc,
+      SpirvInstruction* op);
+
   DEFINE_RELEASE_MEMORY_FOR_CLASS(SpirvUnaryOp)
 
   // For LLVM-style RTTI

@@ -188,11 +188,12 @@ SpirvVectorShuffle *SpirvBuilder::createVectorShuffle(
   return instruction;
 }
 
-SpirvLoad *SpirvBuilder::createLoad(QualType resultType,
-                                    SpirvInstruction *pointer,
-                                    SourceLocation loc) {
+SpirvLoad *
+SpirvBuilder::createLoad(QualType resultType, SpirvInstruction *pointer,
+                         SourceLocation loc,
+                         llvm::Optional<spv::MemoryAccessMask> mask) {
   assert(insertPoint && "null insert point");
-  auto *instruction = new (context) SpirvLoad(resultType, loc, pointer);
+  auto *instruction = new (context) SpirvLoad(resultType, loc, pointer, mask);
   instruction->setStorageClass(pointer->getStorageClass());
   instruction->setLayoutRule(pointer->getLayoutRule());
   instruction->setRValue(true);
@@ -224,11 +225,13 @@ SpirvCopyObject *SpirvBuilder::createCopyObject(QualType resultType,
   return instruction;
 }
 
-SpirvLoad *SpirvBuilder::createLoad(const SpirvType *resultType,
-                                    SpirvInstruction *pointer,
-                                    SourceLocation loc) {
+SpirvLoad *
+SpirvBuilder::createLoad(const SpirvType *resultType, SpirvInstruction *pointer,
+                         SourceLocation loc,
+                         llvm::Optional<spv::MemoryAccessMask> mask) {
   assert(insertPoint && "null insert point");
-  auto *instruction = new (context) SpirvLoad(/*QualType*/ {}, loc, pointer);
+  auto *instruction =
+      new (context) SpirvLoad(/*QualType*/ {}, loc, pointer, mask);
   instruction->setResultType(resultType);
   instruction->setStorageClass(pointer->getStorageClass());
   // Special case for legalization. We could have point-to-pointer types.
@@ -322,6 +325,16 @@ SpirvBuilder::createAccessChain(QualType resultType, SpirvInstruction *base,
 }
 
 SpirvUnaryOp *SpirvBuilder::createUnaryOp(spv::Op op, QualType resultType,
+                                          SpirvInstruction *operand,
+                                          SourceLocation loc) {
+  assert(insertPoint && "null insert point");
+  auto *instruction = new (context) SpirvUnaryOp(op, resultType, loc, operand);
+  insertPoint->addInstruction(instruction);
+  return instruction;
+}
+
+SpirvUnaryOp *SpirvBuilder::createUnaryOp(spv::Op op,
+                                          const SpirvType *resultType,
                                           SpirvInstruction *operand,
                                           SourceLocation loc) {
   assert(insertPoint && "null insert point");
@@ -1517,6 +1530,12 @@ SpirvString *SpirvBuilder::getString(llvm::StringRef str) {
   stringLiterals[str.str()] = instr;
   mod->addString(instr);
   return instr;
+}
+
+const SpirvPointerType *SpirvBuilder::getPhysicalStorageBufferType() {
+  // @yuriy TODO pass in the pointee type as parameter
+  return context.getPointerType(context.getUIntType(32),
+                                spv::StorageClass::PhysicalStorageBuffer);
 }
 
 void SpirvBuilder::addModuleInitCallToEntryPoints() {

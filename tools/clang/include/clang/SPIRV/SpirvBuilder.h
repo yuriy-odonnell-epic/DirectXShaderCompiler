@@ -172,10 +172,13 @@ public:
   /// \brief Creates a load instruction loading the value of the given
   /// <result-type> from the given pointer. Returns the instruction pointer for
   /// the loaded value.
-  SpirvLoad *createLoad(QualType resultType, SpirvInstruction *pointer,
-                        SourceLocation loc);
-  SpirvLoad *createLoad(const SpirvType *resultType, SpirvInstruction *pointer,
-                        SourceLocation loc);
+  SpirvLoad *
+  createLoad(QualType resultType, SpirvInstruction *pointer, SourceLocation loc,
+             llvm::Optional<spv::MemoryAccessMask> mask = llvm::None);
+  SpirvLoad *
+  createLoad(const SpirvType *resultType, SpirvInstruction *pointer,
+             SourceLocation loc,
+             llvm::Optional<spv::MemoryAccessMask> mask = llvm::None);
 
   /// \brief Creates an OpCopyObject instruction from the given pointer.
   SpirvCopyObject *createCopyObject(QualType resultType,
@@ -211,6 +214,9 @@ public:
   /// \brief Creates a unary operation with the given SPIR-V opcode. Returns
   /// the instruction pointer for the result.
   SpirvUnaryOp *createUnaryOp(spv::Op op, QualType resultType,
+                              SpirvInstruction *operand, SourceLocation loc);
+
+  SpirvUnaryOp *createUnaryOp(spv::Op op, const SpirvType *resultType,
                               SpirvInstruction *operand, SourceLocation loc);
 
   /// \brief Creates a binary operation with the given SPIR-V opcode. Returns
@@ -668,7 +674,7 @@ public:
   /// \brief Decorates the given target with the given string.
   void decorateString(SpirvInstruction *target, unsigned decorate,
                       llvm::StringRef strLiteral,
-                      llvm::Optional<uint32_t> memberIdx = llvm::None);                    
+                      llvm::Optional<uint32_t> memberIdx = llvm::None);
 
   /// --- Constants ---
   /// Each of these methods can acquire a unique constant from the SpirvContext,
@@ -685,6 +691,8 @@ public:
   SpirvConstant *getConstantNull(QualType);
 
   SpirvString *getString(llvm::StringRef str);
+
+  const SpirvPointerType *getPhysicalStorageBufferType();
 
 public:
   std::vector<uint32_t> takeModule();

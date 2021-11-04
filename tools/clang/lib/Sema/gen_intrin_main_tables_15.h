@@ -1977,13 +1977,20 @@ static const HLSL_INTRINSIC g_Intrinsics[] =
 
 static const HLSL_INTRINSIC_ARGUMENT g_VkIntrinsics_Args0[] =
 {
+    {"RawBufferLoad", AR_QUAL_OUT, 0, LITEMPLATE_SCALAR, 0, LICOMPTYPE_UINT, 1, 1},
+    {"addr", AR_QUAL_IN, 1, LITEMPLATE_SCALAR, 1, LICOMPTYPE_UINT64, 1, 1},
+};
+
+static const HLSL_INTRINSIC_ARGUMENT g_VkIntrinsics_Args1[] =
+{
     {"ReadClock", AR_QUAL_OUT, 0, LITEMPLATE_SCALAR, 0, LICOMPTYPE_UINT64, 1, 1},
     {"scope", AR_QUAL_IN, 1, LITEMPLATE_SCALAR, 1, LICOMPTYPE_UINT, 1, 1},
 };
 
 static const HLSL_INTRINSIC g_VkIntrinsics[] =
 {
-    {(UINT)hlsl::IntrinsicOp::IOP_VkReadClock, false, false, false, -1, 2, g_VkIntrinsics_Args0},
+    {(UINT)hlsl::IntrinsicOp::IOP_VkRawBufferLoad, true, false, false, -1, 2, g_VkIntrinsics_Args0},
+    {(UINT)hlsl::IntrinsicOp::IOP_VkReadClock, false, false, false, -1, 2, g_VkIntrinsics_Args1},
 };
 
 #endif // ENABLE_SPIRV_CODEGEN
@@ -6737,7 +6744,7 @@ static const UINT g_uTexture2DMethodsCount = 77;
 static const UINT g_uTexture3DMethodsCount = 24;
 static const UINT g_uTextureCUBEArrayMethodsCount = 42;
 static const UINT g_uTextureCUBEMethodsCount = 42;
-static const UINT g_uVkIntrinsicsCount = 1;
+static const UINT g_uVkIntrinsicsCount = 2;
 static const UINT g_uVkSubpassInputMSMethodsCount = 1;
 static const UINT g_uVkSubpassInputMethodsCount = 1;
 
