@@ -189,6 +189,11 @@ void CapabilityVisitor::addCapabilityForType(const SpirvType *type,
   // Pointer type
   else if (const auto *ptrType = dyn_cast<SpirvPointerType>(type)) {
     addCapabilityForType(ptrType->getPointeeType(), loc, sc);
+    if (sc == spv::StorageClass::PhysicalStorageBuffer) {
+      addExtension(Extension::EXT_physical_storage_buffer,
+                   "SPV_KHR_physical_storage_buffer", loc);
+      addCapability(spv::Capability::PhysicalStorageBufferAddresses);
+    }
   }
   // Struct type
   else if (const auto *structType = dyn_cast<StructType>(type)) {
@@ -580,12 +585,6 @@ bool CapabilityVisitor::visit(SpirvEntryPoint *entryPoint) {
     llvm_unreachable("found unknown shader model");
     break;
   }
-
-  // @yuriy HACK for buffer reference experiment
-  addCapability(spv::Capability::PhysicalStorageBufferAddresses);
-  addCapability(spv::Capability::Int64);
-  addExtension(Extension::EXT_physical_storage_buffer,
-               "SPV_EXT_physical_storage_buffer", {});
 
   return true;
 }
