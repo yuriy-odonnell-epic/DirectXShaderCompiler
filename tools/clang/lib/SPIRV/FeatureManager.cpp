@@ -143,7 +143,7 @@ Extension FeatureManager::getExtensionSymbol(llvm::StringRef name) {
       .Case("SPV_KHR_fragment_shading_rate",
             Extension::KHR_fragment_shading_rate)
       .Case("SPV_EXT_shader_image_int64", Extension::EXT_shader_image_int64)
-      .Case("SPV_EXT_physical_storage_buffer", Extension::EXT_physical_storage_buffer)
+      .Case("SPV_KHR_physical_storage_buffer", Extension::KHR_physical_storage_buffer)
       .Default(Extension::Unknown);
 }
 
@@ -197,8 +197,8 @@ const char *FeatureManager::getExtensionName(Extension symbol) {
     return "SPV_KHR_fragment_shading_rate";
   case Extension::EXT_shader_image_int64:
     return "SPV_EXT_shader_image_int64";
-  case Extension::EXT_physical_storage_buffer:
-      return "SPV_EXT_physical_storage_buffer";
+  case Extension::KHR_physical_storage_buffer:
+      return "SPV_KHR_physical_storage_buffer";
   default:
     break;
   }

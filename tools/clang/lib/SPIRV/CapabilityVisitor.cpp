@@ -190,7 +190,7 @@ void CapabilityVisitor::addCapabilityForType(const SpirvType *type,
   else if (const auto *ptrType = dyn_cast<SpirvPointerType>(type)) {
     addCapabilityForType(ptrType->getPointeeType(), loc, sc);
     if (sc == spv::StorageClass::PhysicalStorageBuffer) {
-      addExtension(Extension::EXT_physical_storage_buffer,
+      addExtension(Extension::KHR_physical_storage_buffer,
                    "SPV_KHR_physical_storage_buffer", loc);
       addCapability(spv::Capability::PhysicalStorageBufferAddresses);
     }
