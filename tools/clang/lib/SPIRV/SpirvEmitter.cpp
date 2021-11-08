@@ -12545,8 +12545,12 @@ SpirvInstruction *SpirvEmitter::processRawBufferLoad(const CallExpr *callExpr) {
   SpirvAccessChain *ac = spvBuilder.createAccessChain(astContext.UnsignedIntTy,
                                                       bufferReference, {}, loc);
 
-  SpirvLoad *loadInst = spvBuilder.createLoad(astContext.UnsignedIntTy, ac, loc,
-                                              spv::MemoryAccessMask::Aligned);
+  SpirvLoad *loadInst =
+      spvBuilder.createLoad(astContext.UnsignedIntTy, ac, loc);
+
+  // Raw buffer loads have the same alignment requirement as
+  // ByteAddressBuffer in HLSL
+  loadInst->setAlignment(4);
 
   return loadInst;
 }

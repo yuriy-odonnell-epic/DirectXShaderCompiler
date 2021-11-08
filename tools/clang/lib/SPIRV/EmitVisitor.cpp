@@ -1180,10 +1180,10 @@ bool EmitVisitor::visit(SpirvLoad *inst) {
   if (inst->hasMemoryAccessSemantics()) {
     spv::MemoryAccessMask memoryAccess = inst->getMemoryAccess();
     curInst.push_back(static_cast<uint32_t>(memoryAccess));
-    if (static_cast<uint32_t>(memoryAccess) &
-        static_cast<uint32_t>(spv::MemoryAccessMask::Aligned)) {
-      curInst.push_back(
-          static_cast<uint32_t>(4)); // @yuriy TODO configure custom alignment
+    if (inst->hasAlignment()) {
+      assert(static_cast<uint32_t>(memoryAccess) &
+             static_cast<uint32_t>(spv::MemoryAccessMask::Aligned));
+      curInst.push_back(inst->getAlignment());
     }
   }
   finalizeInstruction(&mainBinary);

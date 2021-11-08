@@ -750,6 +750,17 @@ SpirvLoad::SpirvLoad(QualType resultType, SourceLocation loc,
     : SpirvInstruction(IK_Load, spv::Op::OpLoad, resultType, loc),
       pointer(pointerInst), memoryAccess(mask) {}
 
+void SpirvLoad::setAlignment(uint32_t alignment) {
+  assert(alignment != 0);
+  assert(llvm::isPowerOf2_32(alignment));
+  if (!memoryAccess.hasValue()) {
+    memoryAccess = spv::MemoryAccessMask::Aligned;
+  } else {
+    memoryAccess.getValue() = memoryAccess.getValue() | spv::MemoryAccessMask::Aligned;
+  }
+  memoryAlignment = alignment;
+}
+
 SpirvCopyObject::SpirvCopyObject(QualType resultType, SourceLocation loc,
                                  SpirvInstruction *pointerInst)
     : SpirvInstruction(IK_CopyObject, spv::Op::OpCopyObject, resultType, loc),
