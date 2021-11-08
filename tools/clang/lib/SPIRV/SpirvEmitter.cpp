@@ -687,10 +687,9 @@ void SpirvEmitter::HandleTranslationUnit(ASTContext &context) {
   }
 
   // Addressing and memory model are required in a valid SPIR-V module.
-  // @yuriy HACK for buffer reference experiment
-  spvBuilder.setMemoryModel(spv::AddressingModel::PhysicalStorageBuffer64,
+  // It may be promoted based on features used by this shader.
+  spvBuilder.setMemoryModel(spv::AddressingModel::Logical,
                             spv::MemoryModel::GLSL450);
-
 
   // Even though the 'workQueue' grows due to the above loop, the first
   // 'numEntryPoints' entries in the 'workQueue' are the ones with the HLSL

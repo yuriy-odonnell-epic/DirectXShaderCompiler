@@ -798,8 +798,13 @@ private:
 
 void SpirvBuilder::requireCapability(spv::Capability cap, SourceLocation loc) {
   auto *capability = new (context) SpirvCapability(loc, cap);
-  if (!mod->addCapability(capability))
+  if (mod->addCapability(capability)) {
+      if (cap == spv::Capability::PhysicalStorageBufferAddresses) {
+          mod->promoteAddressingModel(spv::AddressingModel::PhysicalStorageBuffer64);
+      }
+  } else {
     capability->releaseMemory();
+  }
 }
 
 void SpirvBuilder::requireExtension(llvm::StringRef ext, SourceLocation loc) {

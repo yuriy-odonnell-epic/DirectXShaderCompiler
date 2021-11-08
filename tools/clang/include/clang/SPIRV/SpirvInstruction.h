@@ -330,6 +330,7 @@ public:
 
   spv::AddressingModel getAddressingModel() const { return addressModel; }
   spv::MemoryModel getMemoryModel() const { return memoryModel; }
+  void setAddressingModel(spv::AddressingModel addrModel) { addressModel = addrModel; }
 
 private:
   spv::AddressingModel addressModel;
