@@ -172,13 +172,10 @@ public:
   /// \brief Creates a load instruction loading the value of the given
   /// <result-type> from the given pointer. Returns the instruction pointer for
   /// the loaded value.
-  SpirvLoad *
-  createLoad(QualType resultType, SpirvInstruction *pointer, SourceLocation loc,
-             llvm::Optional<spv::MemoryAccessMask> mask = llvm::None);
-  SpirvLoad *
-  createLoad(const SpirvType *resultType, SpirvInstruction *pointer,
-             SourceLocation loc,
-             llvm::Optional<spv::MemoryAccessMask> mask = llvm::None);
+  SpirvLoad *createLoad(QualType resultType, SpirvInstruction *pointer,
+                        SourceLocation loc);
+  SpirvLoad *createLoad(const SpirvType *resultType, SpirvInstruction *pointer,
+                        SourceLocation loc);
 
   /// \brief Creates an OpCopyObject instruction from the given pointer.
   SpirvCopyObject *createCopyObject(QualType resultType,
@@ -674,7 +671,7 @@ public:
   /// \brief Decorates the given target with the given string.
   void decorateString(SpirvInstruction *target, unsigned decorate,
                       llvm::StringRef strLiteral,
-                      llvm::Optional<uint32_t> memberIdx = llvm::None);
+                      llvm::Optional<uint32_t> memberIdx = llvm::None);                    
 
   /// --- Constants ---
   /// Each of these methods can acquire a unique constant from the SpirvContext,

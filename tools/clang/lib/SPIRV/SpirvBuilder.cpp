@@ -188,12 +188,11 @@ SpirvVectorShuffle *SpirvBuilder::createVectorShuffle(
   return instruction;
 }
 
-SpirvLoad *
-SpirvBuilder::createLoad(QualType resultType, SpirvInstruction *pointer,
-                         SourceLocation loc,
-                         llvm::Optional<spv::MemoryAccessMask> mask) {
+SpirvLoad *SpirvBuilder::createLoad(QualType resultType,
+                                    SpirvInstruction *pointer,
+                                    SourceLocation loc) {
   assert(insertPoint && "null insert point");
-  auto *instruction = new (context) SpirvLoad(resultType, loc, pointer, mask);
+  auto *instruction = new (context) SpirvLoad(resultType, loc, pointer);
   instruction->setStorageClass(pointer->getStorageClass());
   instruction->setLayoutRule(pointer->getLayoutRule());
   instruction->setRValue(true);
@@ -225,13 +224,11 @@ SpirvCopyObject *SpirvBuilder::createCopyObject(QualType resultType,
   return instruction;
 }
 
-SpirvLoad *
-SpirvBuilder::createLoad(const SpirvType *resultType, SpirvInstruction *pointer,
-                         SourceLocation loc,
-                         llvm::Optional<spv::MemoryAccessMask> mask) {
+SpirvLoad *SpirvBuilder::createLoad(const SpirvType *resultType,
+                                    SpirvInstruction *pointer,
+                                    SourceLocation loc) {
   assert(insertPoint && "null insert point");
-  auto *instruction =
-      new (context) SpirvLoad(/*QualType*/ {}, loc, pointer, mask);
+  auto *instruction = new (context) SpirvLoad(/*QualType*/ {}, loc, pointer);
   instruction->setResultType(resultType);
   instruction->setStorageClass(pointer->getStorageClass());
   // Special case for legalization. We could have point-to-pointer types.
