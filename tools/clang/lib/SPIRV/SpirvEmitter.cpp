@@ -12534,8 +12534,8 @@ SpirvInstruction *SpirvEmitter::processRawBufferLoad(const CallExpr *callExpr) {
   const clang::Expr *addressExpr = callExpr->getArg(0);
   SpirvInstruction *address = doExpr(addressExpr);
 
-  const SpirvPointerType *bufferType =
-      spvBuilder.getPhysicalStorageBufferType();
+  const HybridPointerType *bufferType =
+      spvBuilder.getPhysicalStorageBufferType(astContext.UnsignedIntTy);
 
   SpirvUnaryOp *bufferReference =
       spvBuilder.createUnaryOp(spv::Op::OpBitcast, bufferType, address, loc);

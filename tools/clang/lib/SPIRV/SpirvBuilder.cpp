@@ -1532,9 +1532,15 @@ SpirvString *SpirvBuilder::getString(llvm::StringRef str) {
   return instr;
 }
 
-const SpirvPointerType *SpirvBuilder::getPhysicalStorageBufferType() {
-  // @yuriy TODO pass in the pointee type as parameter
-  return context.getPointerType(context.getUIntType(32),
+const HybridPointerType *
+SpirvBuilder::getPhysicalStorageBufferType(QualType pointee) {
+  return context.getPointerType(pointee,
+                                spv::StorageClass::PhysicalStorageBuffer);
+}
+
+const SpirvPointerType *
+SpirvBuilder::getPhysicalStorageBufferType(const SpirvType *pointee) {
+  return context.getPointerType(pointee,
                                 spv::StorageClass::PhysicalStorageBuffer);
 }
 

@@ -692,7 +692,8 @@ public:
 
   SpirvString *getString(llvm::StringRef str);
 
-  const SpirvPointerType *getPhysicalStorageBufferType();
+  const HybridPointerType* getPhysicalStorageBufferType(QualType pointee);
+  const SpirvPointerType *getPhysicalStorageBufferType(const SpirvType* pointee);
 
 public:
   std::vector<uint32_t> takeModule();
