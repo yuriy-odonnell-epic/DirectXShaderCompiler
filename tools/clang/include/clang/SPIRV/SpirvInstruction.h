@@ -1667,9 +1667,7 @@ public:
 
   void setAlignment(uint32_t alignment);
   bool hasAlignment() const { return memoryAlignment.hasValue(); }
-  uint32_t SpirvLoad::getAlignment() const {
-    return memoryAlignment.getValue();
-  }
+  uint32_t getAlignment() const { return memoryAlignment.getValue(); }
 
 private:
   SpirvInstruction *pointer;
